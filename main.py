@@ -2,7 +2,7 @@ from discord.ext import tasks, commands
 from discord import app_commands
 from models import Currency
 from dotenv import read_dotenv
-from datetime import datetime, time
+from datetime import datetime
 from pytz import timezone
 
 import discord
@@ -41,17 +41,15 @@ def set_currency() -> str:
 # Server
 GUILD = discord.Object(id=1161842553352630313)
 TESTING_CHANNEL = 1163914190159880304
-TIMES = [
-            time(hour=10, tzinfo=timezone('America/Argentina/Buenos_Aires')),
-            time(hour=19, minute=19, tzinfo=timezone('America/Argentina/Buenos_Aires'))
-    ]
+
 class Sora(discord.Client):
 
-    # TODO task with the inform of opening and closing of market
     def __init__(self, last_update: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tree = app_commands.CommandTree(self)
         self._last_update =  last_update
+        self.market_opening = True
+        self.market_closing = False
 
     async def setup_hook(self) -> None:
         # start the task to run in the background
@@ -76,21 +74,24 @@ class Sora(discord.Client):
                     EURO_BLUE.update(data["blue_euro"])
                     self._last_update = data["last_update"]
     
-    @tasks.loop(time=TIMES)
+    @tasks.loop(minutes=15.0)
     async def market(self):
         channel = self.get_channel(TESTING_CHANNEL)
         t = datetime.now()
-        print("INGRESE AQUI")
-        if t.hour == 10:
+        if t.hour == 10 and self.market_opening == True:
             await self.bluelytics()
             message = f"""Holis!!!! arrancamos el mercado con el dolar blue en los valores:
             {DOLLAR_BLUE.__str__()}"""
-            channel.send(message)
-        if t.hour == 19:
+            self.market_opening = False
+            self.market_closing = True
+            await channel.send(message)
+
+        if t.hour == 15 and self.market_closing == True:
             await self.bluelytics()
-            message = f"""Holis!!!! finaliza el mercado con el dolar blue en los valores:
-            {DOLLAR_BLUE.__str__()}"""
-            channel.send(message)
+            message = f"""Holis!!!! finaliza el mercado con el dolar blue en los valores:\n{DOLLAR_BLUE.__str__()}"""
+            self.market_opening = True
+            self.market_closing = False
+            await channel.send(message)
 
 
 
@@ -104,7 +105,6 @@ class Sora(discord.Client):
 
 
 def main():
-    print(TIMES)
     read_dotenv()
     TOKEN = os.getenv('DISCORD_TOKEN')
     client = Sora(last_update=set_currency(), intents=discord.Intents.default())
