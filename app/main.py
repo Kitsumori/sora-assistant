@@ -39,6 +39,8 @@ def set_currency() -> str:
     return res["last_update"]
 
 # Server
+read_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = discord.Object(id=int(os.getenv('GUILD')))
 TESTING_CHANNEL = int(os.getenv('TESTING_CHANNEL'))
 GENERAL_CHANNEL = int(os.getenv('GENERAL_CHANNEL'))
@@ -106,8 +108,7 @@ class Sora(discord.Client):
 
 
 def main():
-    read_dotenv()
-    TOKEN = os.getenv('DISCORD_TOKEN')
+    
     client = Sora(last_update=set_currency(), intents=discord.Intents.default())
     @client.tree.command(name="dolar_blue")
     async def dollar_blue(interaction: discord.Integration):
