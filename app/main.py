@@ -39,8 +39,11 @@ def set_currency() -> str:
     return res["last_update"]
 
 # Server
-GUILD = discord.Object(id=1161842553352630313)
-TESTING_CHANNEL = 1163914190159880304
+read_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = discord.Object(id=int(os.getenv('GUILD')))
+TESTING_CHANNEL = int(os.getenv('TESTING_CHANNEL'))
+GENERAL_CHANNEL = int(os.getenv('GENERAL_CHANNEL'))
 
 class Sora(discord.Client):
 
@@ -76,7 +79,7 @@ class Sora(discord.Client):
     
     @tasks.loop(minutes=15.0)
     async def market(self):
-        channel = self.get_channel(TESTING_CHANNEL)
+        channel = self.get_channel(GENERAL_CHANNEL)
         t = datetime.now()
         if t.hour == 10 and self.market_opening == True:
             await self.bluelytics()
@@ -104,8 +107,7 @@ class Sora(discord.Client):
 
 
 def main():
-    read_dotenv()
-    TOKEN = os.getenv('DISCORD_TOKEN')
+    
     client = Sora(last_update=set_currency(), intents=discord.Intents.default())
     @client.tree.command(name="dolar_blue")
     async def dollar_blue(interaction: discord.Integration):
