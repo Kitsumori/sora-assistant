@@ -80,8 +80,7 @@ class Sora(discord.Client):
         t = datetime.now()
         if t.hour == 10 and self.market_opening == True:
             await self.bluelytics()
-            message = f"""Holis!!!! arrancamos el mercado con el dolar blue en los valores:
-            {DOLLAR_BLUE.__str__()}"""
+            message = f"""Holis!!!! arrancamos el mercado con el dolar blue en los valores:\n{DOLLAR_BLUE.__str__()}"""
             self.market_opening = False
             self.market_closing = True
             await channel.send(message)
