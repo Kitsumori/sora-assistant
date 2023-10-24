@@ -63,7 +63,8 @@ class Sora(discord.Client):
 
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
-        print('------')
+        print('-'*10)
+        print(datetime.now())
 
     @tasks.loop(minutes=30.0)  # task runs every 60 seconds
     async def bluelytics(self):
