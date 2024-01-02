@@ -8,7 +8,8 @@ class Currency:
         self._sell: float
 
     def __str__(self):
-        return f"Compra: {self.buy}\n Venta: {self.sell}"
+        text = f"Compra: {'{:,}'.format(round(self.buy, 2))}\n Venta: {'{:,}'.format(round(self.sell, 2))}"
+        return text
     
     def json(self):
         """

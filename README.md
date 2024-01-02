@@ -12,6 +12,9 @@ This assistant is for markets, family calendar, games
 
 [ ] Add welcome for new members
 
+[ ] Recolect data about members, and send the opening and closing market price in private.
+
+
 ## Install
 
 Create and config .env file with the variables

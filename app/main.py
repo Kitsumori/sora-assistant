@@ -51,8 +51,7 @@ class Sora(discord.Client):
         super().__init__(*args, **kwargs)
         self.tree = app_commands.CommandTree(self)
         self._last_update =  last_update
-        self.market_opening = True
-        self.market_closing = False
+        self._day_of_market = datetime.today().strftime("%Y-%m-%d")
 
     async def setup_hook(self) -> None:
         # start the task to run in the background
@@ -82,21 +81,14 @@ class Sora(discord.Client):
     async def market(self):
         channel = self.get_channel(GENERAL_CHANNEL)
         t = datetime.now()
-        if t.hour == 10 and self.market_opening == True:
+        today = datetime.today()
+        weekday = today.weekday()
+        if t.hour == 15 and weekday != 5 and weekday != 6 and self._day_of_market != today.strftime("%Y-%m-%d"):
             await self.bluelytics()
-            message = f"""Holis!!!! arrancamos el mercado con el dolar blue en los valores:\n{DOLLAR_BLUE.__str__()}"""
-            self.market_opening = False
-            self.market_closing = True
-            await channel.send(message)
-
-        if t.hour == 15 and self.market_closing == True:
-            await self.bluelytics()
-            message = f"""Holis!!!! finaliza el mercado con el dolar blue en los valores:\n{DOLLAR_BLUE.__str__()}"""
-            self.market_opening = True
-            self.market_closing = False
-            await channel.send(message)
-
-
+            message = discord.Embed(colour=discord.Colour.dark_green(), title="Finaliza el mercado con el el dolar blue a:",
+            description=DOLLAR_BLUE.__str__())
+            self._day_of_market = today.strftime("%Y-%m-%d")
+            await channel.send(embed=message)
 
     @bluelytics.before_loop
     async def before_bluelytics(self):
@@ -112,13 +104,24 @@ def main():
     client = Sora(last_update=set_currency(), intents=discord.Intents.default())
     @client.tree.command(name="dolar_blue")
     async def dollar_blue(interaction: discord.Integration):
-        await interaction.response.send_message(f"{DOLLAR_BLUE.__str__()}", ephemeral=True)
+        message = discord.Embed(colour=discord.Colour.dark_green(), description=DOLLAR_BLUE.__str__())
+        await interaction.response.send_message(embed=message, ephemeral=True)
 
     @client.tree.command(name="dolares_blue_a_pesos")
     @app_commands.describe(dolares = "Por cuantos dolares se debe multiplicar el dolar de mercado (blue)")
     async def dollar_blue_to_pesos(interaction: discord.Interaction, dolares: float):
         pesos = dolares * DOLLAR_BLUE.sell
-        await interaction.response.send_message(f"Son {pesos} pesos", ephemeral=True)
+        message = discord.Embed(colour=discord.Colour.dark_green(), description=f"$ {'{:,}'.format(round(pesos,2))}")
+        
+        await interaction.response.send_message(embed=message, ephemeral=True)
+    
+    @client.tree.command(name="pesos_a_dolares_blue")
+    @app_commands.describe(pesos = "Por cuantos pesos se debe dividir el dolar de mercado (blue)")
+    async def pesos_to_dollar_blue(interaction: discord.Interaction, pesos: float):
+        dolares = pesos / DOLLAR_BLUE.sell
+        message = discord.Embed(colour=discord.Colour.dark_green(), description=f"U$D {'{:,}'.format(round(dolares, 2))}")
+        
+        await interaction.response.send_message(embed=message, ephemeral=True)
     
     client.run(TOKEN)
 
