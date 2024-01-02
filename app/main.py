@@ -51,7 +51,8 @@ class Sora(discord.Client):
         super().__init__(*args, **kwargs)
         self.tree = app_commands.CommandTree(self)
         self._last_update =  last_update
-        self._day_of_market = datetime.today().strftime("%Y-%m-%d")
+        start_date = datetime(1900,1,1)
+        self._day_of_market = start_date.strftime("%Y-%m-%d")
 
     async def setup_hook(self) -> None:
         # start the task to run in the background
@@ -83,7 +84,7 @@ class Sora(discord.Client):
         t = datetime.now()
         today = datetime.today()
         weekday = today.weekday()
-        if t.hour == 15 and weekday != 5 and weekday != 6 and self._day_of_market != today.strftime("%Y-%m-%d"):
+        if t.hour == 17 and weekday != 5 and weekday != 6 and self._day_of_market != today.strftime("%Y-%m-%d"):
             await self.bluelytics()
             message = discord.Embed(colour=discord.Colour.dark_green(), title="Finaliza el mercado con el el dolar blue a:",
             description=DOLLAR_BLUE.__str__())
