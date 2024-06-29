@@ -1,0 +1,21 @@
+{
+  "name": "sora-assistant",
+  "version": "1.0.0",
+  "description": "This assistant is for markets, family calendar, games",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
+  "keywords": [],
+  "author": "AlopexMM",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
