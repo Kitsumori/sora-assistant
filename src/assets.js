@@ -11,3 +11,5 @@ export const Money = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
 })
+
+// TODO - Se tiene que crear un timer que utilice GetCurrencies y devuelva los datos ya parceados cuando finaliza el día durante la semana laboral
