@@ -1,17 +1,5 @@
 import { ApplicationCommandOptionType, Options, REST, Routes } from 'discord.js'
-import fetch from 'node-fetch'
-
-async function getCurrencies() {
-    const response = await fetch("https://api.bluelytics.com.ar/v2/latest")
-    if(!response.ok) throw Error('Something went grong')
-    
-    return response.json()
-}
-
-const money = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-})
+import { Money, GetCurrencies } from './assets.js'
 
 const CommandList = [
     {
@@ -93,11 +81,11 @@ export default class Commands {
      */
     async dollarBlue() {
 
-        const data = await getCurrencies()
+        const data = await GetCurrencies()
 
         return { 
-            "sell": money.format(parseFloat(data['blue'].value_sell)), 
-            "buy": money.format(parseFloat(data['blue'].value_buy)) 
+            "sell": Money.format(parseFloat(data['blue'].value_sell)), 
+            "buy": Money.format(parseFloat(data['blue'].value_buy)) 
         }
     }
 
@@ -107,10 +95,10 @@ export default class Commands {
      * @returns {Intl.NumberFormat}
      */
     async dollarBlueToPesos(dollars) {
-        const data = await getCurrencies()
+        const data = await GetCurrencies()
         const dollarBlue = parseFloat(data['blue'].value_buy)
         const result = dollars * dollarBlue
-        return money.format(result)
+        return Money.format(result)
     }
 
 
@@ -120,10 +108,10 @@ export default class Commands {
      * @returns {Intl.NumberFormat}
      */
     async pesosToDollarBlue(pesos) {
-        const data = await getCurrencies()
+        const data = await GetCurrencies()
         const dollarBlue = parseFloat(data['blue'].value_buy)
         const result = pesos / dollarBlue
-        return money.format(result)
+        return Money.format(result)
     }
 
     /**
@@ -132,10 +120,10 @@ export default class Commands {
      * @returns {Intl.NumberFormat}
      */
     async dollarOficialToPesos(dollars) {
-        const data = await getCurrencies()
+        const data = await GetCurrencies()
         const dollar = parseFloat(data['oficial'].value_buy)
         const result = dollars * dollar
-        return money.format(result)
+        return Money.format(result)
     }
 
     /**
@@ -144,9 +132,9 @@ export default class Commands {
      * @returns {Intl.NumberFormat}
      */
     async pesosToDollarOficial(pesos) {
-        const data = await getCurrencies()
+        const data = await GetCurrencies()
         const dollar = parseFloat(data['oficial'].value_buy)
         const result = pesos / dollar
-        return money.format(result)
+        return Money.format(result)
     }
 }
