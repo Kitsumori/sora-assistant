@@ -2,22 +2,9 @@
 
 This assistant is for markets, family calendar, games
 
-## TODO list
-
-[ ] Logger
-
-[ ] Add crypto currencies
-
-[ ] Add calendar conection if it is posible
-
-[ ] Add welcome for new members
-
-[ ] Recolect data about members, and send the opening and closing market price in private.
-
-
 ## Install
 
-Create and config .env file with the variables
+Create and config .env file in src directory with the variables
 
 - DISCORD_TOKEN
 - GUILD
