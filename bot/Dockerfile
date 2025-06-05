@@ -7,7 +7,7 @@ RUN apt-get update \
 
 WORKDIR /app
 
-COPY app .
+COPY bot .
 
 RUN npm install
 
